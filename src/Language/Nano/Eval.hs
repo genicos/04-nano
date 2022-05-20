@@ -168,11 +168,20 @@ exitError (Error msg) = return (VErr msg)
 eval :: Env -> Expr -> Value
 --------------------------------------------------------------------------------
 eval env a = case a of 
-    EInt i         -> i
-    EVar v         -> lookupId v env
-    EBin Plus x y  -> (eval env x) + (eval env y)
-    EBin Minus x y -> (eval env x) - (eval env y)
-    EBin Mult x y  -> (eval env x) * (eval env y)
+    EInt i         -> VInt i
+    EVar id        -> lookupId id env
+    EBin Plus  x y -> VInt (xi + yi)
+      where 
+        VInt xi = (eval env x)
+        VInt yi = (eval env y)
+    EBin Minus x y -> VInt (xi - yi)
+      where 
+        VInt xi = (eval env x)
+        VInt yi = (eval env y)
+    EBin Mul   x y -> VInt (xi * yi)
+      where 
+        VInt xi = (eval env x)
+        VInt yi = (eval env y)
 
 --------------------------------------------------------------------------------
 evalOp :: Binop -> Value -> Value -> Value
