@@ -167,7 +167,12 @@ exitError (Error msg) = return (VErr msg)
 --------------------------------------------------------------------------------
 eval :: Env -> Expr -> Value
 --------------------------------------------------------------------------------
-eval e a = error "TBD:eval"
+eval env a = case a of 
+    Eint i         -> i
+    Evar v         -> lookupId v env
+    Ebin Plus x y  -> (eval env x) + (eval env y)
+    Ebin Minus x y -> (eval env x) - (eval env y)
+    Ebin Mult x y  -> (eval env x) * (eval env y)
 
 --------------------------------------------------------------------------------
 evalOp :: Binop -> Value -> Value -> Value
