@@ -167,7 +167,7 @@ exitError (Error msg) = return (VErr msg)
 --------------------------------------------------------------------------------
 eval :: Env -> Expr -> Value
 --------------------------------------------------------------------------------
-eval = error "TBD:eval"
+eval e a = error "TBD:eval"
 
 --------------------------------------------------------------------------------
 evalOp :: Binop -> Value -> Value -> Value
@@ -191,7 +191,9 @@ evalOp = error "TBD:evalOp"
 --------------------------------------------------------------------------------
 lookupId :: Id -> Env -> Value
 --------------------------------------------------------------------------------
-lookupId = error "TBD:lookupId"
+lookupId x [] = throw (Error ("unbound variable: " ++ x))
+lookupId x (f:xs) = if (x == (fst f)) then (snd f) else lookupId x xs
+
 
 prelude :: Env
 prelude =

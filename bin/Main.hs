@@ -14,7 +14,7 @@ main = runInputT defaultSettings loop
       Just input -> liftIO (exec input) >> loop
 
 exec :: String -> IO ()
-exec s = (print =<< Nano.execString s) `catch` (print . Nano.errMsg)
+exec s = (print =<< Nano.execString s) `Control.Exception.catch` (print . Nano.errMsg)
 
 -- process input = do
   -- let tokens = Nano.parseTokens input
