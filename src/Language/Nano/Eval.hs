@@ -182,6 +182,32 @@ eval env a = case a of
       where 
         VInt xi = (eval env x)
         VInt yi = (eval env y)
+    EBin Eq x y -> VBool ans
+      where
+        ans = case ((eval env x),(eval env y)) of
+          (VInt xo, VInt yo)   -> xo == yo
+          (VBool xo, VBool yo) -> xo == yo
+    EBin Ne x y ->  VBool ans
+      where
+        ans = case ((eval env x),(eval env y)) of
+          (VInt xo, VInt yo)   -> xo == yo
+          (VBool xo, VBool yo) -> xo == yo
+    EBin Lt x y ->  VBool (xi < yi)
+      where 
+        VInt xi = (eval env x)
+        VInt yi = (eval env y)
+    EBin Le x y ->  VBool (xi <= yi)
+      where 
+        VInt xi = (eval env x)
+        VInt yi = (eval env y)
+    EBin And x y -> VBool (xi && yi)
+      where 
+        VBool xi = (eval env x)
+        VBool yi = (eval env y)
+    EBin Or x y ->  VBool (xi || yi)
+      where 
+        VBool xi = (eval env x)
+        VBool yi = (eval env y)
 
 --------------------------------------------------------------------------------
 evalOp :: Binop -> Value -> Value -> Value
