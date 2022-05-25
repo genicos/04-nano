@@ -175,46 +175,7 @@ eval env a = case a of
     EInt i         -> VInt i
     EBool b        -> VBool b
     EVar id        -> lookupId id env
-    EBin Plus  x y -> VInt (xi + yi)
-      where 
-        VInt xi = (eval env x)
-        VInt yi = (eval env y)
-    EBin Minus x y -> VInt (xi - yi)
-      where 
-        VInt xi = (eval env x)
-        VInt yi = (eval env y)
-    EBin Mul   x y -> VInt (xi * yi)
-      where 
-        VInt xi = (eval env x)
-        VInt yi = (eval env y)
-    EBin Eq x y -> ans
-      where
-        ans = case ((eval env x),(eval env y)) of
-          (VInt xo, VInt yo)   -> VBool (xo == yo)
-          (VBool xo, VBool yo) -> VBool (xo == yo)
-          _ -> throw (Error "type error")
-    EBin Ne x y -> ans
-      where
-        ans = case ((eval env x),(eval env y)) of
-          (VInt xo, VInt yo)   -> VBool (xo /= yo)
-          (VBool xo, VBool yo) -> VBool (xo /= yo)
-          _ -> throw (Error "type error")
-    EBin Lt x y ->  VBool (xi < yi)
-      where 
-        VInt xi = (eval env x)
-        VInt yi = (eval env y)
-    EBin Le x y ->  VBool (xi <= yi)
-      where 
-        VInt xi = (eval env x)
-        VInt yi = (eval env y)
-    EBin And x y -> VBool (xi && yi)
-      where 
-        VBool xi = (eval env x)
-        VBool yi = (eval env y)
-    EBin Or x y ->  VBool (xi || yi)
-      where 
-        VBool xi = (eval env x)
-        VBool yi = (eval env y)
+    EBin binop x y -> evalOp binop (eval env x) (eval env y)
     EIf p t f -> ans
       where
         ans = case (eval env p) of
@@ -231,7 +192,22 @@ eval env a = case a of
 --------------------------------------------------------------------------------
 evalOp :: Binop -> Value -> Value -> Value
 --------------------------------------------------------------------------------
-evalOp = error "TBD:evalOp"
+evalOp binop (VInt x) (VInt y) = case binop of
+  Plus -> VInt (x + y)
+  Minus -> VInt (x - y)
+  Mul -> VInt (x * y)
+  Eq -> VBool (x == y)
+  Ne -> VBool (x /= y)
+  Lt -> VBool (x < y)
+  Le -> VBool (x <= y)
+
+evalOp binop (VBool x) (VBool y) = case binop of
+  Eq ->  VBool (x == y)
+  Ne ->  VBool (x /= y)
+  And -> VBool (x && y)
+  Or  -> VBool (x || y)
+
+evalOp binop _ _ = throw (Error "type error")
 
 --------------------------------------------------------------------------------
 -- | `lookupId x env` returns the most recent
