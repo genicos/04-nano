@@ -219,8 +219,8 @@ eval env a = case a of
     ELam x e1 -> VClos env x e1
     EApp e1 e2 -> ans
       where
-        ans = case e2 of
-          ELam x e -> (eval env (ELet x e e1))
+        ans = case e1 of
+          ELam x e -> (eval env (ELet x e e2))
 --------------------------------------------------------------------------------
 evalOp :: Binop -> Value -> Value -> Value
 --------------------------------------------------------------------------------
