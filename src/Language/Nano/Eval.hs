@@ -168,13 +168,12 @@ exitError (Error msg) = return (VErr msg)
 eval :: Env -> Expr -> Value
 --------------------------------------------------------------------------------
 
-eval env (EInt i) = VInt i
-
 
 eval env a = case a of
     EInt i         -> VInt i
     EBool b        -> VBool b
     EVar id        -> lookupId id env
+    ENil           -> VNil
     EBin binop x y -> evalOp binop (eval env x) (eval env y)
     EIf p t f -> ans
       where
@@ -187,7 +186,6 @@ eval env a = case a of
       where
         ans = case e1 of
           ELam x e -> (eval env (ELet x e2 e))
-    _ -> throw (Error ("unimplemented"))
 
 --------------------------------------------------------------------------------
 evalOp :: Binop -> Value -> Value -> Value
@@ -200,14 +198,20 @@ evalOp binop (VInt x) (VInt y) = case binop of
   Ne -> VBool (x /= y)
   Lt -> VBool (x < y)
   Le -> VBool (x <= y)
+  Cons -> VPair (VInt x) (VInt y)
+  _ -> throw (Error "type error")
 
 evalOp binop (VBool x) (VBool y) = case binop of
   Eq ->  VBool (x == y)
   Ne ->  VBool (x /= y)
   And -> VBool (x && y)
   Or  -> VBool (x || y)
+  Cons -> VPair (VBool x) (VBool y)
+  _ -> throw (Error "type error")
 
-evalOp binop _ _ = throw (Error "type error")
+evalOp binop x y = case binop of
+  Cons -> VPair x y
+  _ -> throw (Error "type error")
 
 --------------------------------------------------------------------------------
 -- | `lookupId x env` returns the most recent
