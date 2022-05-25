@@ -188,7 +188,7 @@ eval env a = case a of
           (VInt xo, VInt yo)   -> VBool (xo /= yo)
           (VBool xo, VBool yo) -> VBool (xo /= yo)
           _ -> throw (Error "type error")
-    EBin Ne x y ->  ans
+    EBin Ne x y -> ans
       where
         ans = case ((eval env x),(eval env y)) of
           (VInt xo, VInt yo)   -> VBool (xo /= yo)
@@ -213,7 +213,7 @@ eval env a = case a of
     EIf p t f -> ans
       where
         ans = case (eval env p) of
-          VBool b -> if b then t else f
+          VBool b -> if b then (eval env t) else (eval env f)
           _ -> throw (Error "type error")
 
 --------------------------------------------------------------------------------
