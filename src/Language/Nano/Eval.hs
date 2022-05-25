@@ -210,6 +210,11 @@ eval env a = case a of
       where 
         VBool xi = (eval env x)
         VBool yi = (eval env y)
+    EIf p t f -> ans
+      where
+        ans = case (eval env p) of
+          VBool b -> if b then t else f
+          _ -> throw (Error "type error")
 
 --------------------------------------------------------------------------------
 evalOp :: Binop -> Value -> Value -> Value
