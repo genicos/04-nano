@@ -167,7 +167,11 @@ exitError (Error msg) = return (VErr msg)
 --------------------------------------------------------------------------------
 eval :: Env -> Expr -> Value
 --------------------------------------------------------------------------------
-eval env a = case a of 
+
+eval env (EInt i) = VInt i
+
+
+eval env a = case a of
     EInt i         -> VInt i
     EVar id        -> lookupId id env
     EBin Plus  x y -> VInt (xi + yi)
@@ -185,8 +189,8 @@ eval env a = case a of
     EBin Eq x y -> ans
       where
         ans = case ((eval env x),(eval env y)) of
-          (VInt xo, VInt yo)   -> VBool (xo /= yo)
-          (VBool xo, VBool yo) -> VBool (xo /= yo)
+          (VInt xo, VInt yo)   -> VBool (xo == yo)
+          (VBool xo, VBool yo) -> VBool (xo == yo)
           _ -> throw (Error "type error")
     EBin Ne x y -> ans
       where
@@ -221,6 +225,8 @@ eval env a = case a of
       where
         ans = case (eval env e1) of
           VClos nenv x e -> (eval nenv (ELet x e e2))
+    _ -> throw (Error ("unimplemented"))
+
 --------------------------------------------------------------------------------
 evalOp :: Binop -> Value -> Value -> Value
 --------------------------------------------------------------------------------
