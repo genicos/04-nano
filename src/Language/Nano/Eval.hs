@@ -185,13 +185,13 @@ eval env a = case a of
     EBin Eq x y -> VBool ans
       where
         ans = case ((eval env x),(eval env y)) of
-          (VInt xo, VInt yo)   -> VBool (xo == yo)
-          (VBool xo, VBool yo) -> VBool (xo == yo)
+          (VInt xo, VInt yo)   -> (xo == yo)
+          (VBool xo, VBool yo) -> (xo == yo)
     EBin Ne x y ->  VBool ans
       where
         ans = case ((eval env x),(eval env y)) of
-          (VInt xo, VInt yo)   -> VBool !(xo == yo)
-          (VBool xo, VBool yo) -> VBool !(xo == yo)
+          (VInt xo, VInt yo)   -> (xo /= yo)
+          (VBool xo, VBool yo) -> (xo /= yo)
     EBin Lt x y ->  VBool (xi < yi)
       where 
         VInt xi = (eval env x)
