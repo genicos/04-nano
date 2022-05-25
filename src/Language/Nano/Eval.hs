@@ -173,6 +173,7 @@ eval env (EInt i) = VInt i
 
 eval env a = case a of
     EInt i         -> VInt i
+    EBool b        -> VBool b
     EVar id        -> lookupId id env
     EBin Plus  x y -> VInt (xi + yi)
       where 
