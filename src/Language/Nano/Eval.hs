@@ -224,8 +224,8 @@ eval env a = case a of
     ELam x e1 -> VClos env x e1
     EApp e1 e2 -> ans
       where
-        ans = case (eval env e1) of
-          VClos nenv x e -> (eval nenv (ELet x e e2))
+        ans = case e1 of
+          ELam x e -> (eval env (ELet x e2 e))
     _ -> throw (Error ("unimplemented"))
 
 --------------------------------------------------------------------------------
