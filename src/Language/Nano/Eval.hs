@@ -215,6 +215,7 @@ eval env a = case a of
         ans = case (eval env p) of
           VBool b -> if b then (eval env t) else (eval env f)
           _ -> throw (Error "type error")
+    ELet x e1 e2 -> (eval ((x,(eval env e1)):env) e2)
 
 --------------------------------------------------------------------------------
 evalOp :: Binop -> Value -> Value -> Value
