@@ -216,7 +216,11 @@ eval env a = case a of
           VBool b -> if b then (eval env t) else (eval env f)
           _ -> throw (Error "type error")
     ELet x e1 e2 -> (eval ((x,(eval env e1)):env) e2)
-
+    ELam x e1 -> VClos env x e1
+    EApp e1 e2 -> ans
+      where
+        ans = case e1 of
+          ELam x e -> (eval env (ELet x e e2))
 --------------------------------------------------------------------------------
 evalOp :: Binop -> Value -> Value -> Value
 --------------------------------------------------------------------------------
